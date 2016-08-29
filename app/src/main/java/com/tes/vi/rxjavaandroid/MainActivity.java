@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Action1;
 import rx.observers.Observers;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,37 +43,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void tesRxjava(){
 
-        Observable<String> myObservable = Observable.create(
-                new Observable.OnSubscribe<String>() {
-                    @Override
-                    public void call(Subscriber<? super String> subscriber) {
-                        subscriber.onNext("Awesome day ~ " + et_input.getText().toString());
-                        subscriber.onCompleted();
-                    }
-                }
-        );
+        Observable<String> myObservable = Observable.just("Awesome day ~ " + et_input.getText().toString());
 
-        Subscriber<String> mySubscriber = new Subscriber<String>() {
+        Action1<String> onNextAction = new Action1<String>() {
             @Override
-            public void onCompleted() {
-                viewLog("Complete");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                tv_hello.setText(e.toString());
-            }
-
-            @Override
-            public void onNext(String s) {
+            public void call(String s) {
                 tv_hello.setText(s);
             }
         };
 
-        myObservable.subscribe(mySubscriber);
+        myObservable.subscribe(onNextAction);
     }
 
-    private void viewLog(String s){
-        Log.i("RxJava",s);
-    }
 }
