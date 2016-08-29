@@ -3,25 +3,19 @@ package com.tes.vi.rxjavaandroid;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Subscriber;
 import rx.observers.Observers;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.tv_hello)
     TextView tv_hello;
-
-    @BindView(R.id.et_input)
     EditText et_input;
-
-    @BindView(R.id.btn_test)
     Button btn_tes;
 
     @Override
@@ -29,9 +23,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ButterKnife.bind(this);
+        init();
+    }
 
-        tesRxjava();
+    private void init(){
+
+        tv_hello = (TextView)findViewById(R.id.tv_hello);
+        et_input  = (EditText)findViewById(R.id.et_input);
+        btn_tes = (Button)findViewById(R.id.btn_test);
+
+        btn_tes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tesRxjava();
+            }
+        });
     }
 
     private void tesRxjava(){
@@ -40,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
-                        subscriber.onNext("Awesome day ~ ");
+                        subscriber.onNext("Awesome day ~ " + et_input.getText().toString());
                         subscriber.onCompleted();
                     }
                 }
@@ -54,12 +60,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                viewLog(e.toString());
+                tv_hello.setText(e.toString());
             }
 
             @Override
             public void onNext(String s) {
-                viewLog(s);
+                tv_hello.setText(s);
             }
         };
 
