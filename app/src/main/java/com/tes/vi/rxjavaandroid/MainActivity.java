@@ -43,13 +43,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void tesRxjava(){
 
-        Observable.just("Awesome day ~ " + et_input.getText().toString())
+        /*Observable.just("Awesome day ~ " + et_input.getText().toString())
                 .subscribe(new Action1<String>() {
                     @Override
                     public void call(String s) {
                         tv_hello.setText(s);
                     }
                 });
+*/
+        Observable.just("Awesome day ~ " + et_input.getText().toString())
+                .subscribe(s -> tv_hello.setText(s));
     }
 
 }
