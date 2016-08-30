@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -18,8 +20,14 @@ import rx.observers.Observers;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    @BindView(R.id.tv_hello)
     TextView tv_hello;
+
+    @BindView(R.id.et_input)
     EditText et_input;
+
+    @BindView(R.id.btn_test)
     Button btn_tes;
 
     Subscription obSubc;
@@ -30,14 +38,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ButterKnife.bind(this);
+
         init();
     }
 
     private void init(){
-
-        tv_hello = (TextView)findViewById(R.id.tv_hello);
-        et_input  = (EditText)findViewById(R.id.et_input);
-        btn_tes = (Button)findViewById(R.id.btn_test);
 
         btnSubc = RxView.clicks(btn_tes)
                 .subscribe(aVoid -> tesRxjava());
