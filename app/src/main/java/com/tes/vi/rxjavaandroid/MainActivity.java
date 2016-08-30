@@ -8,8 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.view.RxView;
+
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.functions.Action1;
 import rx.observers.Observers;
 
@@ -18,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     TextView tv_hello;
     EditText et_input;
     Button btn_tes;
+
+    Subscription obSubc;
+    Subscription btnSubc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,26 +39,23 @@ public class MainActivity extends AppCompatActivity {
         et_input  = (EditText)findViewById(R.id.et_input);
         btn_tes = (Button)findViewById(R.id.btn_test);
 
-        btn_tes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tesRxjava();
-            }
-        });
+        btnSubc = RxView.clicks(btn_tes)
+                .subscribe(aVoid -> tesRxjava());
     }
 
     private void tesRxjava(){
 
-        /*Observable.just("Awesome day ~ " + et_input.getText().toString())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        tv_hello.setText(s);
-                    }
-                });
-*/
-        Observable.just("Awesome day ~ " + et_input.getText().toString())
+        obSubc = Observable.just("Awesome day ~ ")
+                .map(s->s+ et_input.getText().toString())
                 .subscribe(s -> tv_hello.setText(s));
     }
 
+    @Override
+    protected void onDestroy() {
+
+        obSubc.unsubscribe();
+        btnSubc.unsubscribe();
+
+        super.onDestroy();
+    }
 }
